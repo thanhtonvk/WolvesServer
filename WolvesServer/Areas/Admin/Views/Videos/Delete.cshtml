@@ -1,0 +1,50 @@
+﻿@model WolvesServer.EF.Video
+@{
+    ViewBag.Title = "Delete";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Xóa</h2>
+
+<h3>Bạn có muốn xóa nó khôn</h3>
+<div>
+
+    <hr/>
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.Content)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Content)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.LinkVideo)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.LinkVideo)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.LinkYoutube)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.LinkYoutube)
+        </dd>
+
+
+    </dl>
+
+    @using (Html.BeginForm())
+    {
+        @Html.AntiForgeryToken()
+
+        <div class="form-actions no-color">
+            <input type="submit" value="Xóa" class="btn btn-danger"/> |
+
+        </div>
+    }
+</div>

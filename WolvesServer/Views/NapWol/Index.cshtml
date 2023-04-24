@@ -1,0 +1,37 @@
+﻿@model IEnumerable<WolvesServer.Models.Wol>
+
+@{
+    ViewBag.Title = "Nạp Wol";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@{
+    string formatMoney(int money)
+    {
+        var info = System.Globalization.CultureInfo.GetCultureInfo("vi-VN");
+        return String.Format("{0:0,0đ}", money);
+    }
+
+}
+<link href="~/Content/card_style.css" rel="stylesheet"/>
+<div class="row">
+    @{
+        foreach (var wol in Model)
+        {
+            <div class="coupon-card col-md-4 col-sm-12" style="margin-bottom: 20px">
+                <img src="~/Content/logo-200x200-removebg-preview.png" class="logo"/>
+                <h2>@wol.Quantity Wol</h2>
+                <di class="coupon-row">
+                    <span id="cpnCode">@formatMoney(wol.Money)</span>
+                    <span id="cpnBtn">
+                        <a href="~/NapWol/LoadWol?idWols=@wol.Id">Nạp wol</a>
+                    </span>
+                </di>
+                <div class="circle1"></div>
+                <div class="circle2"></div>
+            </div>
+        }
+    }
+
+
+
+</div>

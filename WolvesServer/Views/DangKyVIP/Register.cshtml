@@ -1,0 +1,20 @@
+﻿@model System.Data.Entity.Core.Objects.ObjectResult<WolvesServer.EF.CheckVIP_Result>
+
+@{
+    ViewBag.Title = "Thông báo";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Thông báo</h2>
+@{
+    if (Model != null)
+    {
+        <h3>Chúc mừng bạn đã đăng ký thành công tài khoản <b style="color: orange">VIP</b></h3>
+        <h4>Bạn sẽ được hưởng những đặc quyền trên App WolvesVN: <p style="color: red;font-weight: bold">Kèo tín hiệu Wolves, Tin tức nóng, Đăng không giới hạn chỉ báo</p> </h4>
+    }
+    else
+    {
+        <h3>Số dư không đủ, vui lòng nạp thêm Wol để hưởng toàn bộ dịch vụ của chúng tôi</h3>
+        <a class="btn btn-danger" href="~/NapWol">Nạp ngay</a>
+    }
+}

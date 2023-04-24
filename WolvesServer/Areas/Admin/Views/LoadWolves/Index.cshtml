@@ -1,0 +1,159 @@
+﻿@using WolvesServer.EF
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+    List<LoadWolf> listWaiting= ViewBag.ListWaiting;
+    List<LoadWolf> listConfirm = ViewBag.ListConfirm;
+    List<LoadWolf> listCancel = ViewBag.ListCancel;
+
+}
+
+<h2>Nạp Wolves</h2>
+<ul class="nav nav-tabs" id="myTab" role="tablist">
+    <li class="nav-item" role="presentation">
+        <button class="nav-link active" id="home-tab" data-bs-toggle="tab" data-bs-target="#home" type="button" role="tab" aria-controls="home" aria-selected="true">Đang đợi xác nhận</button>
+    </li>
+    <li class="nav-item" role="presentation">
+        <button class="nav-link" id="profile-tab" data-bs-toggle="tab" data-bs-target="#profile" type="button" role="tab" aria-controls="profile" aria-selected="false">Đã xác nhận</button>
+    </li>
+    <li class="nav-item" role="presentation">
+        <button class="nav-link" id="contact-tab" data-bs-toggle="tab" data-bs-target="#contact" type="button" role="tab" aria-controls="contact" aria-selected="false">Đã hủy yêu cầu</button>
+    </li>
+</ul>
+<div class="tab-content" id="myTabContent">
+    <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
+        <table class="table table-bordered table-striped">
+            <tr>
+                <th>
+                    ID Người dùng
+                </th>
+                <th>
+                    Email
+                </th>
+                <th>
+                   Wolves
+                </th>
+                
+                <th>
+                 SĐT
+                </th>
+                <th></th>
+            </tr>
+
+            @foreach (var item in listWaiting)
+            {
+                <tr>
+                    <td>
+                        @item.IdAccount
+                    </td>
+            
+                    <td>@item.Account.Email</td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Wolves)
+                    </td>
+                   
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Account.PhoneNumber)
+                    </td>
+                    <td>
+                    
+                    
+                        @Html.ActionLink("Xác nhận", "Confirm", new { id = item.Id, idAccount = item.IdAccount, wolves = item.Wolves},new {@class= "btn btn-success"})
+                        @Html.ActionLink("Hủy", "Cancel", new { id = item.Id }, new {@class = "btn btn-danger"})
+
+                    </td>
+                </tr>
+            }
+
+        </table>
+
+
+    </div>
+    <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">
+        <table class="table table-bordered table-striped">
+            <tr>
+                <th>
+                    ID Người dùng
+                </th>
+                <th>
+                    Email
+                </th>
+                <th>
+                    Wolves
+                </th>
+
+                <th>
+                    SĐT
+                </th>
+                <th></th>
+            </tr>
+
+            @foreach (var item in listConfirm)
+            {
+                <tr>
+                    <td>
+                        @item.IdAccount
+                    </td>
+
+                    <td>@item.Account.Email</td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Wolves)
+                    </td>
+
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Account.PhoneNumber)
+                    </td>
+                   
+                </tr>
+            }
+
+        </table>
+    </div>
+    <div class="tab-pane fade" id="contact" role="tabpanel" aria-labelledby="contact-tab">
+        <table class="table table-bordered table-striped">
+            <tr>
+                <th>
+                    ID Người dùng
+                </th>
+                <th>
+                    Email
+                </th>
+                <th>
+                    Wolves
+                </th>
+
+                <th>
+                    SĐT
+                </th>
+                <th></th>
+            </tr>
+
+            @foreach (var item in listCancel)
+            {
+                <tr>
+                    <td>
+                        @item.IdAccount
+                    </td>
+
+                    <td>@item.Account.Email</td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Wolves)
+                    </td>
+
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Account.PhoneNumber)
+                    </td>
+                    <td>
+
+
+                        @Html.ActionLink("Xác nhận", "Confirm", new { id = item.Id, idAccount = item.IdAccount, wolves = item.Wolves }, new { @class = "btn btn-success" })
+                      
+
+                    </td>
+                </tr>
+            }
+
+        </table>
+    </div>
+</div>
+

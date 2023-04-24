@@ -1,0 +1,33 @@
+﻿@model IEnumerable<WolvesServer.EF.PackVIP>
+
+@{
+    ViewBag.Title = "Đăng ký VIP";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Đăng ký VIP</h2>
+<link href="~/Content/card_style.css" rel="stylesheet"/>
+<div class="row">
+    @{
+        foreach (var packVip in Model)
+        {
+            <div class="coupon-card col-md-6 col-sm-12 col-lg-3" style="margin-bottom: 20px">
+                <img src="~/Content/logo-200x200-removebg-preview.png" class="logo"/>
+                <h2>@packVip.Month Tháng</h2>
+                <di class="coupon-row">
+                    <span id="cpnCode">@packVip.Wol 
+                    <i><img src="~/Content/logo-200x200-removebg-preview.png" height="15"></i>
+                        </span>
+                    <span id="cpnBtn">
+                        <a href="~/DangKyVIP/RegisterVip?id=@packVip.Id">Đăng ký</a>
+                    </span>
+                </di>
+                <div class="circle1"></div>
+                <div class="circle2"></div>
+            </div>
+        }
+    }
+
+
+
+</div>

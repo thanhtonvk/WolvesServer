@@ -1,0 +1,50 @@
+﻿@model IEnumerable<WolvesServer.EF.TongQuat>
+
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Thống kê</h2>
+
+<p>
+    @Html.ActionLink("Thêm mới", "Create", null, new
+{
+    @class = "btn btn-primary"
+})
+</p>
+<table class="table table-bordered table-striped">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.TongPip)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Trades)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.WinRate)
+        </th>
+        <th></th>
+    </tr>
+
+    @foreach (var item in Model)
+    {
+<tr>
+    <td>
+        @Html.DisplayFor(modelItem => item.TongPip)
+    </td>
+    <td>
+        @Html.DisplayFor(modelItem => item.Trades)
+    </td>
+    <td>
+        @Html.DisplayFor(modelItem => item.WinRate)%
+    </td>
+    <td>
+        @Html.ActionLink("Sửa", "Edit", new { id = item.Id }, new { @class = "btn btn-success" })
+
+        @Html.ActionLink("Xóa", "Delete", new { id = item.Id }, new { @class = "btn btn-danger" })
+    </td>
+</tr>
+    }
+
+</table>

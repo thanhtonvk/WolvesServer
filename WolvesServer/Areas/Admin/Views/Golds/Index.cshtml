@@ -1,0 +1,46 @@
+﻿@model IEnumerable<WolvesServer.EF.Gold>
+
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Thị trường vàng</h2>
+
+<p>
+    @Html.ActionLink("Thêm mới", "Create", null, new
+    {
+        @class = "btn btn-primary"
+    })
+</p>
+<table class="table table-bordered table-striped">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.Symbol)
+        </th>
+       
+        <th>
+            @Html.DisplayNameFor(model => model.Date)
+        </th>
+        <th></th>
+    </tr>
+
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Symbol)
+            </td>
+           
+            <td>
+                @Html.DisplayFor(modelItem => item.Date)
+            </td>
+            <td>
+                @Html.ActionLink("Sửa", "Edit", new {id = item.Id}, new {@class = "btn btn-success"})
+
+                @Html.ActionLink("Xóa", "Delete", new {id = item.Id}, new {@class = "btn btn-danger"})
+            </td>
+        </tr>
+    }
+
+</table>

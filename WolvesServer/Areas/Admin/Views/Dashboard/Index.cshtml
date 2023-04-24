@@ -1,0 +1,68 @@
+﻿@model IEnumerable<WolvesServer.EF.ThongKe>
+
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Dashboard</h2>
+
+<p>
+    @Html.ActionLink("Thêm mới", "Create", null, new
+{
+    @class = "btn btn-primary"
+})
+</p>
+<table class="table table-bordered table-striped">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.Money)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Date)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.PipCu)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.PipMoi)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.SL)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.TP)
+        </th>
+        <th>Tùy chọn</th>
+    </tr>
+
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Money)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Date)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.PipCu)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.PipMoi)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.SL)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.TP)
+            </td>
+            <td>
+                @Html.ActionLink("Sửa", "Edit", new { id = item.Id }, new { @class = "btn btn-success" })
+
+                @Html.ActionLink("Xóa", "Delete", new { id = item.Id }, new { @class = "btn btn-danger" })
+            </td>
+        </tr>
+    }
+
+</table>

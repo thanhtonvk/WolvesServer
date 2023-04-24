@@ -1,0 +1,63 @@
+﻿@model IEnumerable<WolvesServer.EF.TinHieuPost>
+
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Tín hiệu thường</h2>
+
+<p>
+    @Html.ActionLink("Thêm mới", "Create", null, new
+{
+    @class = "btn btn-primary"
+})
+</p>
+<table class="table table-bordered table-striped">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.Date)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Content)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.TP)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.SL)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Image)
+        </th>
+        <th></th>
+    </tr>
+
+    @foreach (var item in Model)
+    {
+<tr>
+    <td>
+        @Html.DisplayFor(modelItem => item.Date)
+    </td>
+    <td>
+        @Html.DisplayFor(modelItem => item.Content)
+    </td>
+    <td>
+        @Html.DisplayFor(modelItem => item.TP)
+    </td>
+    <td>
+        @Html.DisplayFor(modelItem => item.SL)
+    </td>
+    <td>
+        <img src="@item.Image" height="100" />
+
+    </td>
+    <td>
+        @Html.ActionLink("Sửa", "Edit", new { id = item.Id }, new { @class = "btn btn-success" })
+
+        @Html.ActionLink("Xóa", "Delete", new { id = item.Id }, new { @class = "btn btn-danger" })
+    </td>
+</tr>
+    }
+
+</table>

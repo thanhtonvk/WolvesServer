@@ -1,0 +1,23 @@
+﻿@using WolvesServer.EF
+@model WolvesServer.Models.Wol
+
+@{
+    ViewBag.Title = "Nạp wol";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@{
+    DBContext db = new DBContext();
+    var contact = db.Contacts.FirstOrDefault();
+    var account = (LoginAccount_Result) Session["TaiKhoan"];
+
+    string formatMoney(int money)
+    {
+        var info = System.Globalization.CultureInfo.GetCultureInfo("vi-VN");
+        return String.Format("{0:0,0đ}", money);
+    }
+}
+<h2>Thanh toán</h2>
+<h2>Chúc mừng bạn đã yêu cầu nạp tiền thành công</h2>
+<h3>Vui lòng quét mã QR và chuyển <b style="color: red">@formatMoney(Model.Money)</b> để tiến hành nạp</h3>
+<h4>Nội dung chuyển khoản: <b style="color: red">LOADWOL @account.Id @Model.Quantity</b></h4>
+<img src="~/Content/324549780_756924799097705_7095135635980137393_n.jpg" width="400">
