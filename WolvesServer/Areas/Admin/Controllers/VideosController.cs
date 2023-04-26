@@ -56,7 +56,7 @@ namespace WolvesServer.Areas.Admin.Controllers
 
                     string urlImage = Server.MapPath("~/Image/Video/" + fileName);
                     image.SaveAs(urlImage);
-                    video.LinkVideo = "http://103.29.0.41/Image/Video/" + fileName;
+                    video.LinkVideo = "http://139.99.116.68/Image/Video/" + fileName;
                 }
 
                 if (ModelState.IsValid)
@@ -114,7 +114,7 @@ namespace WolvesServer.Areas.Admin.Controllers
 
                     string urlImage = Server.MapPath("~/Image/Video/" + fileName);
                     image.SaveAs(urlImage);
-                    video.LinkVideo = "http://103.29.0.41/Image/Video/" + fileName;
+                    video.LinkVideo = "http://139.99.116.68/Image/Video/" + fileName;
                 }
 
 

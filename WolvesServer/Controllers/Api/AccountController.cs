@@ -119,7 +119,7 @@ namespace WolvesServer.Controllers.Api
                 });
                 if (check) return Ok();
             }
-            catch (Exception e)
+            catch
             {
                 return BadRequest();
             }

@@ -6,6 +6,8 @@ using System.Linq;
 using System.Net;
 using System.Web;
 using System.Web.Mvc;
+using FireSharp.Config;
+using FireSharp.Interfaces;
 using WolvesServer.EF;
 
 namespace WolvesServer.Areas.Admin.Controllers
@@ -14,6 +16,12 @@ namespace WolvesServer.Areas.Admin.Controllers
     {
         private DBContext db = new DBContext();
 
+        IFirebaseConfig config = new FirebaseConfig
+        {
+            AuthSecret = "R20tmZqaTY9WnrsEr9vk5nyzq6rZ6hO4OACKD1Su",
+            BasePath = "https://wolfteam-f01f4-default-rtdb.asia-southeast1.firebasedatabase.app/"
+        };
+
         // GET: Admin/Golds
         public ActionResult Index()
         {
@@ -21,7 +29,7 @@ namespace WolvesServer.Areas.Admin.Controllers
             model.Reverse();
             return View(model);
         }
-        
+
 
         // GET: Admin/Golds/Create
         public ActionResult Create()
@@ -41,9 +49,11 @@ namespace WolvesServer.Areas.Admin.Controllers
             gold.Date = DateTime.Parse(date);
             gold.BuyInto = 0;
             gold.SoldOut = 0;
-            
+
             if (ModelState.IsValid)
             {
+                IFirebaseClient client = new FireSharp.FirebaseClient(config);
+                client.Set($"Golds/{date}/{gold.Id}", gold);
                 db.Golds.Add(gold);
                 db.SaveChanges();
                 return RedirectToAction("Index");
@@ -61,7 +71,7 @@ namespace WolvesServer.Areas.Admin.Controllers
             }
 
             Gold gold = db.Golds.Find(id);
-           
+
             if (gold == null)
             {
                 return HttpNotFound();
@@ -84,6 +94,8 @@ namespace WolvesServer.Areas.Admin.Controllers
                 gold.SoldOut = 0;
                 string date = DateTime.Now.ToString("yyyy-M-d");
                 gold.Date = DateTime.Parse(date);
+                IFirebaseClient client = new FireSharp.FirebaseClient(config);
+                client.Set($"Golds/{date}/{gold.Id}", gold);
                 db.Entry(gold).State = EntityState.Modified;
                 db.SaveChanges();
                 return RedirectToAction("Index");
@@ -116,6 +128,8 @@ namespace WolvesServer.Areas.Admin.Controllers
         {
             Gold gold = db.Golds.Find(id);
             db.Golds.Remove(gold);
+            IFirebaseClient client = new FireSharp.FirebaseClient(config);
+            if (gold.Date != null) client.Delete($"Golds/{gold.Date.Value:yyyy-M-d}/{gold.Id}");
             db.SaveChanges();
             return RedirectToAction("Index");
         }

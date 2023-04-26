@@ -6,6 +6,8 @@ using System.Linq;
 using System.Net;
 using System.Web;
 using System.Web.Mvc;
+using FireSharp.Config;
+using FireSharp.Interfaces;
 using WolvesServer.EF;
 
 namespace WolvesServer.Areas.Admin.Controllers
@@ -13,6 +15,12 @@ namespace WolvesServer.Areas.Admin.Controllers
     public class TinHieuPostsController : Controller
     {
         private DBContext db = new DBContext();
+
+        IFirebaseConfig config = new FirebaseConfig
+        {
+            AuthSecret = "R20tmZqaTY9WnrsEr9vk5nyzq6rZ6hO4OACKD1Su",
+            BasePath = "https://wolfteam-f01f4-default-rtdb.asia-southeast1.firebasedatabase.app/"
+        };
 
         // GET: Admin/TinHieuPosts
         public ActionResult Index()
@@ -23,10 +31,10 @@ namespace WolvesServer.Areas.Admin.Controllers
                 model.Reverse();
                 return View(model);
             }
-            return RedirectToAction("Index", "Home", new { area = "" });
 
+            return RedirectToAction("Index", "Home", new {area = ""});
         }
-        
+
         // GET: Admin/TinHieuPosts/Create
         public ActionResult Create()
         {
@@ -34,8 +42,8 @@ namespace WolvesServer.Areas.Admin.Controllers
             {
                 return View();
             }
-            return RedirectToAction("Index", "Home", new { area = "" });
 
+            return RedirectToAction("Index", "Home", new {area = ""});
         }
 
         // POST: Admin/TinHieuPosts/Create
@@ -43,7 +51,8 @@ namespace WolvesServer.Areas.Admin.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "Id,Content,TP,SL")] TinHieuPost tinHieuPost, HttpPostedFileBase image)
+        public ActionResult Create([Bind(Include = "Id,Content,TP,SL")] TinHieuPost tinHieuPost,
+            HttpPostedFileBase image)
         {
             if (Session["TaiKhoan"] != null)
             {
@@ -63,22 +72,23 @@ namespace WolvesServer.Areas.Admin.Controllers
                     image.SaveAs(urlImage);
 
 
-                    tinHieuPost.Image = "http://103.29.0.41/Image/NormalSignal/" + fileName;
-
-
+                    tinHieuPost.Image = "http://139.99.116.68/Image/NormalSignal/" + fileName;
                 }
+
                 if (ModelState.IsValid)
                 {
-
                     db.TinHieuPosts.Add(tinHieuPost);
+
+                    IFirebaseClient client = new FireSharp.FirebaseClient(config);
+                    client.Set($"TinHieuPost/{date}/{tinHieuPost.Id}", tinHieuPost);
                     db.SaveChanges();
                     return RedirectToAction("Index");
                 }
 
                 return View(tinHieuPost);
             }
-            return RedirectToAction("Index", "Home", new { area = "" });
 
+            return RedirectToAction("Index", "Home", new {area = ""});
         }
 
         // GET: Admin/TinHieuPosts/Edit/5
@@ -90,15 +100,17 @@ namespace WolvesServer.Areas.Admin.Controllers
                 {
                     return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
                 }
+
                 TinHieuPost tinHieuPost = db.TinHieuPosts.Find(id);
                 if (tinHieuPost == null)
                 {
                     return HttpNotFound();
                 }
+
                 return View(tinHieuPost);
             }
-            return RedirectToAction("Index", "Home", new { area = "" });
 
+            return RedirectToAction("Index", "Home", new {area = ""});
         }
 
         // POST: Admin/TinHieuPosts/Edit/5
@@ -119,23 +131,24 @@ namespace WolvesServer.Areas.Admin.Controllers
                     string fileName = System.IO.Path.GetFileName(Image.FileName);
                     string urlImage = Server.MapPath("~/Image/" + fileName);
                     Image.SaveAs(urlImage);
-                    tinHieuPost.Image = "http://103.29.0.41/Image/NormalSignal/" + fileName;
-
+                    tinHieuPost.Image = "http://139.99.116.68/Image/NormalSignal/" + fileName;
                 }
+
                 if (ModelState.IsValid)
                 {
-                   
                     string date = DateTime.Now.ToString("yyyy-M-d");
                     tinHieuPost.Date = DateTime.Parse(date);
-
+                    IFirebaseClient client = new FireSharp.FirebaseClient(config);
+                    client.Set($"TinHieuPost/{date}/{tinHieuPost.Id}", tinHieuPost);
                     db.Entry(tinHieuPost).State = EntityState.Modified;
                     db.SaveChanges();
                     return RedirectToAction("Index");
                 }
+
                 return View(tinHieuPost);
             }
-            return RedirectToAction("Index", "Home", new { area = "" });
 
+            return RedirectToAction("Index", "Home", new {area = ""});
         }
 
         // GET: Admin/TinHieuPosts/Delete/5
@@ -147,15 +160,17 @@ namespace WolvesServer.Areas.Admin.Controllers
                 {
                     return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
                 }
+
                 TinHieuPost tinHieuPost = db.TinHieuPosts.Find(id);
                 if (tinHieuPost == null)
                 {
                     return HttpNotFound();
                 }
+
                 return View(tinHieuPost);
             }
-            return RedirectToAction("Index", "Home", new { area = "" });
 
+            return RedirectToAction("Index", "Home", new {area = ""});
         }
 
         // POST: Admin/TinHieuPosts/Delete/5
@@ -168,10 +183,13 @@ namespace WolvesServer.Areas.Admin.Controllers
                 TinHieuPost tinHieuPost = db.TinHieuPosts.Find(id);
                 db.TinHieuPosts.Remove(tinHieuPost);
                 db.SaveChanges();
+                IFirebaseClient client = new FireSharp.FirebaseClient(config);
+                if (tinHieuPost.Date != null)
+                    client.Delete($"TinHieuPost/{tinHieuPost.Date.Value:yyyy-M-d}/{tinHieuPost.Id}");
                 return RedirectToAction("Index");
             }
-            return RedirectToAction("Index", "Home", new { area = "" });
 
+            return RedirectToAction("Index", "Home", new {area = ""});
         }
 
         protected override void Dispose(bool disposing)
@@ -180,6 +198,7 @@ namespace WolvesServer.Areas.Admin.Controllers
             {
                 db.Dispose();
             }
+
             base.Dispose(disposing);
         }
     }

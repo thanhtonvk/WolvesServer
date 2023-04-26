@@ -6,6 +6,8 @@ using System.Linq;
 using System.Net;
 using System.Web;
 using System.Web.Mvc;
+using FireSharp.Config;
+using FireSharp.Interfaces;
 using WolvesServer.EF;
 
 namespace WolvesServer.Areas.Admin.Controllers
@@ -13,6 +15,12 @@ namespace WolvesServer.Areas.Admin.Controllers
     public class NewWolvesController : Controller
     {
         private DBContext db = new DBContext();
+
+        IFirebaseConfig config = new FirebaseConfig
+        {
+            AuthSecret = "R20tmZqaTY9WnrsEr9vk5nyzq6rZ6hO4OACKD1Su",
+            BasePath = "https://wolfteam-f01f4-default-rtdb.asia-southeast1.firebasedatabase.app/"
+        };
 
         // GET: Admin/NewWolves
         public ActionResult Index()
@@ -23,8 +31,8 @@ namespace WolvesServer.Areas.Admin.Controllers
                 model.Reverse();
                 return View(model);
             }
-            return RedirectToAction("Index", "Home", new { area = "" });
 
+            return RedirectToAction("Index", "Home", new {area = ""});
         }
 
 
@@ -35,8 +43,8 @@ namespace WolvesServer.Areas.Admin.Controllers
             {
                 return View();
             }
-            return RedirectToAction("Index", "Home", new { area = "" });
 
+            return RedirectToAction("Index", "Home", new {area = ""});
         }
 
         // POST: Admin/NewWolves/Create
@@ -58,18 +66,15 @@ namespace WolvesServer.Areas.Admin.Controllers
 
                     string urlImage = Server.MapPath("~/Image/NewsWolves/" + fileName);
                     image.SaveAs(urlImage);
-
-
-                    newWolf.Image = "http://103.29.0.41/Image/NewsWolves/" + fileName;
-
-
-
+                    newWolf.Image = "http://139.99.116.68/Image/NewsWolves/" + fileName;
                 }
+
                 if (ModelState.IsValid)
                 {
                     string date = DateTime.Now.ToString("yyyy-M-d");
                     newWolf.Date = DateTime.Parse(date);
-                
+                    IFirebaseClient client = new FireSharp.FirebaseClient(config);
+                    client.Set($"NewWolves/{date}/{newWolf.Id}", newWolf);
                     db.NewWolves.Add(newWolf);
                     db.SaveChanges();
                     return RedirectToAction("Index");
@@ -77,9 +82,8 @@ namespace WolvesServer.Areas.Admin.Controllers
 
                 return View(newWolf);
             }
-            return RedirectToAction("Index", "Home", new { area = "" });
 
-
+            return RedirectToAction("Index", "Home", new {area = ""});
         }
 
         // GET: Admin/NewWolves/Edit/5
@@ -91,15 +95,17 @@ namespace WolvesServer.Areas.Admin.Controllers
                 {
                     return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
                 }
+
                 NewWolf newWolf = db.NewWolves.Find(id);
                 if (newWolf == null)
                 {
                     return HttpNotFound();
                 }
+
                 return View(newWolf);
             }
-            return RedirectToAction("Index", "Home", new { area = "" });
 
+            return RedirectToAction("Index", "Home", new {area = ""});
         }
 
         // POST: Admin/NewWolves/Edit/5
@@ -113,6 +119,7 @@ namespace WolvesServer.Areas.Admin.Controllers
             {
                 if (image != null && image.ContentLength > 0)
                 {
+                    IFirebaseClient client = new FireSharp.FirebaseClient(config);
                     var byteImage = new byte[image.ContentLength];
                     image.InputStream.Read(byteImage, 0, image.ContentLength);
 
@@ -123,23 +130,24 @@ namespace WolvesServer.Areas.Admin.Controllers
                     image.SaveAs(urlImage);
 
 
-                    newWolf.Image = "http://103.29.0.41/Image/NewsWolves/" + fileName;
-
-
+                    newWolf.Image = "http://139.99.116.68/Image/NewsWolves/" + fileName;
                 }
+
                 if (ModelState.IsValid)
                 {
                     string date = DateTime.Now.ToString("yyyy-M-d");
                     newWolf.Date = DateTime.Parse(date);
-
+                    IFirebaseClient client = new FireSharp.FirebaseClient(config);
+                    client.Set($"NewWolves/{date}/{newWolf.Id}", newWolf);
                     db.Entry(newWolf).State = EntityState.Modified;
                     db.SaveChanges();
                     return RedirectToAction("Index");
                 }
+
                 return View(newWolf);
             }
-            return RedirectToAction("Index", "Home", new { area = "" });
 
+            return RedirectToAction("Index", "Home", new {area = ""});
         }
 
         // GET: Admin/NewWolves/Delete/5
@@ -151,15 +159,17 @@ namespace WolvesServer.Areas.Admin.Controllers
                 {
                     return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
                 }
+
                 NewWolf newWolf = db.NewWolves.Find(id);
                 if (newWolf == null)
                 {
                     return HttpNotFound();
                 }
+
                 return View(newWolf);
             }
-            return RedirectToAction("Index", "Home", new { area = "" });
 
+            return RedirectToAction("Index", "Home", new {area = ""});
         }
 
         // POST: Admin/NewWolves/Delete/5
@@ -169,13 +179,20 @@ namespace WolvesServer.Areas.Admin.Controllers
         {
             if (Session["TaiKhoan"] != null)
             {
+                IFirebaseClient client = new FireSharp.FirebaseClient(config);
                 NewWolf newWolf = db.NewWolves.Find(id);
-                db.NewWolves.Remove(newWolf);
+                if (newWolf != null)
+                {
+                    if (newWolf.Date != null)
+                        client.Delete($"NewWolves/{newWolf.Date.Value:yyyy-M-d}/{newWolf.Id}");
+                    db.NewWolves.Remove(newWolf);
+                }
+
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }
-            return RedirectToAction("Index", "Home", new { area = "" });
 
+            return RedirectToAction("Index", "Home", new {area = ""});
         }
 
         protected override void Dispose(bool disposing)
@@ -184,6 +201,7 @@ namespace WolvesServer.Areas.Admin.Controllers
             {
                 db.Dispose();
             }
+
             base.Dispose(disposing);
         }
     }

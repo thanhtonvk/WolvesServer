@@ -6,6 +6,8 @@ using System.Linq;
 using System.Net;
 using System.Web;
 using System.Web.Mvc;
+using FireSharp.Config;
+using FireSharp.Interfaces;
 using WolvesServer.EF;
 
 namespace WolvesServer.Areas.Admin.Controllers
@@ -13,7 +15,11 @@ namespace WolvesServer.Areas.Admin.Controllers
     public class SanGiaoDichsController : Controller
     {
         private DBContext db = new DBContext();
-
+        IFirebaseConfig config = new FirebaseConfig
+        {
+            AuthSecret = "R20tmZqaTY9WnrsEr9vk5nyzq6rZ6hO4OACKD1Su",
+            BasePath = "https://wolfteam-f01f4-default-rtdb.asia-southeast1.firebasedatabase.app/"
+        };
         // GET: Admin/SanGiaoDichs
         public ActionResult Index()
         {

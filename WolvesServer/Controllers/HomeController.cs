@@ -65,7 +65,7 @@ namespace WolvesServer.Controllers
                 ViewBag.ThongBao = "Tài khoản hoặc mật khẩu không chính xác";
                 return View();
             }
-            catch (Exception ex)
+            catch
             {
                 ViewBag.ThongBao = "Lỗi đăng nhập";
 
