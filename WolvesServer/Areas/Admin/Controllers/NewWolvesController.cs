@@ -73,10 +73,12 @@ namespace WolvesServer.Areas.Admin.Controllers
                 {
                     string date = DateTime.Now.ToString("yyyy-M-d");
                     newWolf.Date = DateTime.Parse(date);
-                    IFirebaseClient client = new FireSharp.FirebaseClient(config);
-                    client.Set($"NewWolves/{date}/{newWolf.Id}", newWolf);
+                    
                     db.NewWolves.Add(newWolf);
                     db.SaveChanges();
+                    newWolf = db.NewWolves.ToList().Last();
+                    IFirebaseClient client = new FireSharp.FirebaseClient(config);
+                    client.Set($"NewWolves/{date}/{newWolf.Id}", newWolf);
                     return RedirectToAction("Index");
                 }
 

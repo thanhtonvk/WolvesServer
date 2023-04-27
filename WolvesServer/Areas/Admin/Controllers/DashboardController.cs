@@ -6,6 +6,8 @@ using System.Linq;
 using System.Net;
 using System.Web;
 using System.Web.Mvc;
+using FireSharp.Config;
+using FireSharp.Interfaces;
 using WolvesServer.EF;
 
 namespace WolvesServer.Areas.Admin.Controllers
@@ -13,7 +15,11 @@ namespace WolvesServer.Areas.Admin.Controllers
     public class DashboardController : Controller
     {
         private DBContext db = new DBContext();
-
+        IFirebaseConfig config = new FirebaseConfig
+        {
+            AuthSecret = "R20tmZqaTY9WnrsEr9vk5nyzq6rZ6hO4OACKD1Su",
+            BasePath = "https://wolfteam-f01f4-default-rtdb.asia-southeast1.firebasedatabase.app/"
+        };
         // GET: Admin/Dashboard
         public ActionResult Index()
         {
@@ -55,6 +61,9 @@ namespace WolvesServer.Areas.Admin.Controllers
                     thongKe.Date = DateTime.Parse(date);
                     db.ThongKes.Add(thongKe);
                     db.SaveChanges();
+                    thongKe = db.ThongKes.ToList().Last();
+                    IFirebaseClient client = new FireSharp.FirebaseClient(config);
+                    client.Set($"TongPIP/{date}/{thongKe.Id}", thongKe);
                     return RedirectToAction("Index");
                 }
 

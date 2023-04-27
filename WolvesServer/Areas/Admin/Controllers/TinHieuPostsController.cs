@@ -78,10 +78,10 @@ namespace WolvesServer.Areas.Admin.Controllers
                 if (ModelState.IsValid)
                 {
                     db.TinHieuPosts.Add(tinHieuPost);
-
+                    db.SaveChanges();
+                    tinHieuPost = db.TinHieuPosts.ToList().Last();
                     IFirebaseClient client = new FireSharp.FirebaseClient(config);
                     client.Set($"TinHieuPost/{date}/{tinHieuPost.Id}", tinHieuPost);
-                    db.SaveChanges();
                     return RedirectToAction("Index");
                 }
 

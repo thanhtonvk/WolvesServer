@@ -6,6 +6,8 @@ using System.Linq;
 using System.Net;
 using System.Web;
 using System.Web.Mvc;
+using FireSharp.Config;
+using FireSharp.Interfaces;
 using WolvesServer.EF;
 
 namespace WolvesServer.Areas.Admin.Controllers
@@ -23,8 +25,8 @@ namespace WolvesServer.Areas.Admin.Controllers
                 model.Reverse();
                 return View(model);
             }
-            return RedirectToAction("Index", "Home", new { area = "" });
 
+            return RedirectToAction("Index", "Home", new {area = ""});
         }
 
 
@@ -35,16 +37,23 @@ namespace WolvesServer.Areas.Admin.Controllers
             {
                 return View();
             }
-            return RedirectToAction("Index", "Home", new { area = "" });
 
+            return RedirectToAction("Index", "Home", new {area = ""});
         }
+
+        IFirebaseConfig config = new FirebaseConfig
+        {
+            AuthSecret = "R20tmZqaTY9WnrsEr9vk5nyzq6rZ6hO4OACKD1Su",
+            BasePath = "https://wolfteam-f01f4-default-rtdb.asia-southeast1.firebasedatabase.app/"
+        };
 
         // POST: Admin/TongQuats/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to, for 
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "Id,TongPip,Trades,WinRate")] TongQuat tongQuat)
+        public ActionResult Create([Bind(Include = "Id,TongPip,Trades,WinRate")]
+            TongQuat tongQuat)
         {
             if (Session["TaiKhoan"] != null)
             {
@@ -52,13 +61,16 @@ namespace WolvesServer.Areas.Admin.Controllers
                 {
                     db.TongQuats.Add(tongQuat);
                     db.SaveChanges();
+                    tongQuat = db.TongQuats.ToList().Last();
+                    IFirebaseClient client = new FireSharp.FirebaseClient(config);
+                    client.Set($"TongQuat/{tongQuat.Id}", tongQuat);
                     return RedirectToAction("Index");
                 }
 
                 return View(tongQuat);
             }
-            return RedirectToAction("Index", "Home", new { area = "" });
 
+            return RedirectToAction("Index", "Home", new {area = ""});
         }
 
         // GET: Admin/TongQuats/Edit/5
@@ -70,15 +82,17 @@ namespace WolvesServer.Areas.Admin.Controllers
                 {
                     return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
                 }
+
                 TongQuat tongQuat = db.TongQuats.Find(id);
                 if (tongQuat == null)
                 {
                     return HttpNotFound();
                 }
+
                 return View(tongQuat);
             }
-            return RedirectToAction("Index", "Home", new { area = "" });
 
+            return RedirectToAction("Index", "Home", new {area = ""});
         }
 
         // POST: Admin/TongQuats/Edit/5
@@ -86,7 +100,8 @@ namespace WolvesServer.Areas.Admin.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "Id,TongPip,Trades,WinRate")] TongQuat tongQuat)
+        public ActionResult Edit([Bind(Include = "Id,TongPip,Trades,WinRate")]
+            TongQuat tongQuat)
         {
             if (Session["TaiKhoan"] != null)
             {
@@ -96,10 +111,11 @@ namespace WolvesServer.Areas.Admin.Controllers
                     db.SaveChanges();
                     return RedirectToAction("Index");
                 }
+
                 return View(tongQuat);
             }
-            return RedirectToAction("Index", "Home", new { area = "" });
 
+            return RedirectToAction("Index", "Home", new {area = ""});
         }
 
         // GET: Admin/TongQuats/Delete/5
@@ -111,15 +127,17 @@ namespace WolvesServer.Areas.Admin.Controllers
                 {
                     return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
                 }
+
                 TongQuat tongQuat = db.TongQuats.Find(id);
                 if (tongQuat == null)
                 {
                     return HttpNotFound();
                 }
+
                 return View(tongQuat);
             }
-            return RedirectToAction("Index", "Home", new { area = "" });
 
+            return RedirectToAction("Index", "Home", new {area = ""});
         }
 
         // POST: Admin/TongQuats/Delete/5
@@ -134,8 +152,8 @@ namespace WolvesServer.Areas.Admin.Controllers
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }
-            return RedirectToAction("Index", "Home", new { area = "" });
 
+            return RedirectToAction("Index", "Home", new {area = ""});
         }
 
         protected override void Dispose(bool disposing)
@@ -144,6 +162,7 @@ namespace WolvesServer.Areas.Admin.Controllers
             {
                 db.Dispose();
             }
+
             base.Dispose(disposing);
         }
     }

@@ -52,10 +52,12 @@ namespace WolvesServer.Areas.Admin.Controllers
 
             if (ModelState.IsValid)
             {
-                IFirebaseClient client = new FireSharp.FirebaseClient(config);
-                client.Set($"Golds/{date}/{gold.Id}", gold);
+                
                 db.Golds.Add(gold);
                 db.SaveChanges();
+                gold = db.Golds.ToList().Last();
+                IFirebaseClient client = new FireSharp.FirebaseClient(config);
+                client.Set($"Golds/{date}/{gold.Id}", gold);
                 return RedirectToAction("Index");
             }
 
