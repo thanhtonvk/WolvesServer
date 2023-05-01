@@ -15,7 +15,7 @@ namespace WolvesServer.Areas.Admin.Controllers
     public class GoldsController : Controller
     {
         private DBContext db = new DBContext();
-
+        private SendNotification _sendNotification = new SendNotification();
         IFirebaseConfig config = new FirebaseConfig
         {
             AuthSecret = "R20tmZqaTY9WnrsEr9vk5nyzq6rZ6hO4OACKD1Su",
@@ -58,6 +58,7 @@ namespace WolvesServer.Areas.Admin.Controllers
                 gold = db.Golds.ToList().Last();
                 IFirebaseClient client = new FireSharp.FirebaseClient(config);
                 client.Set($"Golds/{date}/{gold.Id}", gold);
+                _sendNotification.Send($"{gold.Content}");
                 return RedirectToAction("Index");
             }
 

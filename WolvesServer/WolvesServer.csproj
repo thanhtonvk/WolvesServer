@@ -359,6 +359,7 @@
     <Compile Include="Areas\Admin\Controllers\LoadWolvesController.cs" />
     <Compile Include="Areas\Admin\Controllers\NewWolvesController.cs" />
     <Compile Include="Areas\Admin\Controllers\SanGiaoDichsController.cs" />
+    <Compile Include="Areas\Admin\Controllers\SendNotification.cs" />
     <Compile Include="Areas\Admin\Controllers\TinHieuPostsController.cs" />
     <Compile Include="Areas\Admin\Controllers\TongQuatsController.cs" />
     <Compile Include="Areas\Admin\Controllers\VideosController.cs" />

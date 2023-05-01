@@ -50,6 +50,8 @@ namespace WolvesServer.Areas.Admin.Controllers
         // POST: Admin/TongQuats/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to, for 
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
+        private SendNotification _sendNotification = new SendNotification();
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Create([Bind(Include = "Id,TongPip,Trades,WinRate")]
@@ -64,6 +66,8 @@ namespace WolvesServer.Areas.Admin.Controllers
                     tongQuat = db.TongQuats.ToList().Last();
                     IFirebaseClient client = new FireSharp.FirebaseClient(config);
                     client.Set($"TongQuat/{tongQuat.Id}", tongQuat);
+                    _sendNotification.Send(
+                        $"Trades: {tongQuat.Trades}\nTổng pip: {tongQuat.TongPip}\nWinrates: {tongQuat.WinRate}");
                     return RedirectToAction("Index");
                 }
 

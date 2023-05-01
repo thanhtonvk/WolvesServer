@@ -49,6 +49,8 @@ namespace WolvesServer.Areas.Admin.Controllers
         // POST: Admin/TinHieuPosts/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to, for 
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
+        
+        private SendNotification _sendNotification = new SendNotification();
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Create([Bind(Include = "Id,Content,TP,SL")] TinHieuPost tinHieuPost,
@@ -82,6 +84,7 @@ namespace WolvesServer.Areas.Admin.Controllers
                     tinHieuPost = db.TinHieuPosts.ToList().Last();
                     IFirebaseClient client = new FireSharp.FirebaseClient(config);
                     client.Set($"TinHieuPost/{date}/{tinHieuPost.Id}", tinHieuPost);
+                    _sendNotification.Send(tinHieuPost.Content);
                     return RedirectToAction("Index");
                 }
 

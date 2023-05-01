@@ -22,6 +22,8 @@ namespace WolvesServer.Areas.Admin.Controllers
             BasePath = "https://wolfteam-f01f4-default-rtdb.asia-southeast1.firebasedatabase.app/"
         };
 
+        private SendNotification _sendNotification = new SendNotification();
+
         // GET: Admin/NewWolves
         public ActionResult Index()
         {
@@ -73,12 +75,13 @@ namespace WolvesServer.Areas.Admin.Controllers
                 {
                     string date = DateTime.Now.ToString("yyyy-M-d");
                     newWolf.Date = DateTime.Parse(date);
-                    
+
                     db.NewWolves.Add(newWolf);
                     db.SaveChanges();
                     newWolf = db.NewWolves.ToList().Last();
                     IFirebaseClient client = new FireSharp.FirebaseClient(config);
                     client.Set($"NewWolves/{date}/{newWolf.Id}", newWolf);
+                    _sendNotification.Send(newWolf.Content);
                     return RedirectToAction("Index");
                 }
 

@@ -20,6 +20,8 @@ namespace WolvesServer.Areas.Admin.Controllers
             AuthSecret = "R20tmZqaTY9WnrsEr9vk5nyzq6rZ6hO4OACKD1Su",
             BasePath = "https://wolfteam-f01f4-default-rtdb.asia-southeast1.firebasedatabase.app/"
         };
+
+        private SendNotification _sendNotification = new SendNotification();
         // GET: Admin/Dashboard
         public ActionResult Index()
         {
@@ -64,6 +66,7 @@ namespace WolvesServer.Areas.Admin.Controllers
                     thongKe = db.ThongKes.ToList().Last();
                     IFirebaseClient client = new FireSharp.FirebaseClient(config);
                     client.Set($"TongPIP/{date}/{thongKe.Id}", thongKe);
+                    _sendNotification.Send(thongKe.Money);
                     return RedirectToAction("Index");
                 }
 
